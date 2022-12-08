@@ -139,6 +139,7 @@ class House:
                 case 1:
                     os.system("cls")
                     self.addWeapon()
+                    self.house()
                 case 2:
                     os.system("cls")
                     self.addWeapon()
@@ -407,9 +408,21 @@ class House:
                 os.system("cls")
         #武器战力
         #计算公式：[(基础伤害 * 非暴击几率百分比) + (暴击伤害 * 暴击率百分比)] * 攻击速度 * sqrt(攻击距离)
-        weapon[7] = ((weapon[3] * (weapon[6] / 100)) + (weapon[3] * 2 * (1 - weapon[6] / 100))) * weapon[4] * math.sqrt(weapon[5])
-        #打开武器库文件，准备写入信息 a为追加模式
-        f = open("weapon.txt", "a")
+        weapon[7] = (int)(((weapon[3] * (weapon[6] / 100)) + (weapon[3] * 2 * (1 - weapon[6] / 100))) * weapon[4] * math.sqrt(weapon[5]))
+        #打开武器库文件，准备写入信息 a为追加模式,以utf-8打开防止乱码
+        f = open("weapon.txt", "a", encoding="utf-8")
+        for i in range(0, 8):
+            f.write((str)(weapon[i]))
+            f.write(" ")
+            print(weapon[i])
+        f.write("\n")
+        #文件用完及时关闭
+        f.close()
+        #进入下一步前清屏
+        os.system("cls")
+        #添加成功
+        print("\t\t      >>>添加成功<<<")
+
 #判断武器文件和密码文件是否存在，若不存在则创建
 if not os.path.exists("password.txt"):
     # w 只用于写入，如果该文件已存在则覆盖，不存在则创建。
