@@ -180,7 +180,7 @@ class House:
                     self.house()
                 case 3:
                     os.system("cls")
-                    self.modWeapon()
+                    self.modifyWeapon()
                     self.house()
                 case 4:
                     os.system("cls")
@@ -446,7 +446,6 @@ class House:
         #武器名输入
         est = 1;
         while est:
-            #默认下一次会再进入循环
             #界面
             print("=================欢迎使用武器仓库管理系统=================")
             print("\n\t--------------   删除武器   --------------")
@@ -497,7 +496,7 @@ class House:
                     os.system("cls")
                     print("\t\t      >>>取消删除<<<")
     #第三个功能，修改武器的某个信息
-    def modWeapon(self):
+    def modifyWeapon(self):
         #初始化武器信息的八个参数
         weapon = ["", "", "", "", "", "", "", ""];
         #est用于判断以下输入操作是否合法，若不合法，通过while循环来重新输入
@@ -804,9 +803,203 @@ class House:
         print("\t\t      >>>修改成功<<<")
     #第四个功能，查询武器信息
     def searchWeapon(self):
-        pass
-
-
+        #est用于判断以下输入操作是否合法，若不合法，通过while循环来重新输入
+        est = 1;
+        while est:
+            #默认下一次不会再进入循环
+            est = 0
+            #界面
+            print("=================欢迎使用武器仓库管理系统=================")
+            print("\n\t--------------   查询武器   --------------")
+            print("\t  --------------------------------------\n")
+            print("\t\t     <1>根据名称查找")
+            print("\t\t     <2>根据职业筛选")
+            print("\t\t     <0>返回")
+            print("\n\t  --------------------------------------")
+            print("\n\t\t     >>>  ", end="")
+            num = input();
+            # 判断用户是否想返回
+            if num == "0":
+                os.system("cls")
+                return
+            #输入1、2以外的提示错误
+            if num != "1" and num != "2":
+                est = 1
+                os.system("cls")
+                print("\t\t      >>>输入有误<<<")
+                
+        #进入下一步前清屏
+        os.system("cls")
+        match num:
+            case "1":
+                #est用于判断以下输入操作是否合法，若不合法，通过while循环来重新输入
+                est = 1;
+                while est:
+                    #界面
+                    print("=================欢迎使用武器仓库管理系统=================")
+                    print("\n\t--------------   查询武器   --------------")
+                    print("\n\t              请输入武器名称")
+                    print("\t             - 输入off返回 -")
+                    print("\n\t\t     >>>  ", end="")
+                    weaponname = input();
+                    # 判断用户是否想返回
+                    if weaponname == "off" or weaponname == "OFF":
+                        os.system("cls")
+                        self.searchWeapon()
+                        return;
+                    #通过Weapon类中武器信息读取函数来获取文件中武器信息
+                    list1 = ReadWeapon().readweapon()
+                    #循环判断用户输入的名字是否存在
+                    for i in range(0,len(list1)):
+                        if list1[i][0] == weaponname:
+                            #检测到武器存在，修改判断条件，不进入下次循环
+                            est = 0
+                            break        
+                    if est == 1:
+                        #清屏重新显示
+                        os.system("cls")
+                        #提示输入错误
+                        print("\t\t >>>该名称的武器不存在<<<")
+                    else:
+                        os.system("cls")
+                        #界面
+                        print("=================欢迎使用武器仓库管理系统=================")
+                        print("\n\t--------------   武器详情   --------------\n")
+                        #通过Weapon类输出武器详情信息
+                        Weapon(list1[i]).output()
+                        print("\n\t\t  ", end="")
+                        os.system("pause")
+                        os.system("cls")
+                        self.searchWeapon()
+                        return
+            case "2":
+                #est用于判断以下输入操作是否合法，若不合法，通过while循环来重新输入
+                est = 1;
+                while est:
+                    #界面
+                    print("=================欢迎使用武器仓库管理系统=================")
+                    print("\n\t--------------   筛选武器   --------------")
+                    print("\n\t             请输入职业序号")
+                    print("\n\t               <1> 战士")
+                    print("\t               <2> 射手")
+                    print("\t               <3> 法师")
+                    print("\t               <4> 不详")
+                    print("\t               <0> 返回")
+                    print("\n\t\t     >>>  ", end="")
+                    num = input();
+                    list1 = ReadWeapon().readweapon()
+                    os.system("cls")
+                    #est用于判断以下输入操作是否合法，若不合法，通过while循环来重新输入
+                    est1 = 1;
+                    while est1:
+                        #list2用于存放查到的武器信息
+                        list2 = []
+                        #默认进行下一次循环
+                        est1 = 1
+                        #用于判断该类武器是否存在
+                        cunzai = 0
+                        #用于计数
+                        count = 0
+                        match num:
+                            case "1":
+                                #界面
+                                print("=================欢迎使用武器仓库管理系统=================")
+                                print("\n\t--------------   战士武器   --------------")
+                                print("\t        ---输入序号查看详情 0返回---\n")
+                                #循环判断是否有符合筛选条件的武器
+                                for i in range(0,len(list1)):
+                                    if list1[i][1] == "1":
+                                        #若有符合的武器，显示出来
+                                        cunzai = 1
+                                        count += 1
+                                        #将查询到的武器信息存入
+                                        list2.append(list1[i])
+                                        print("\t\t       <" + (str)(count) + "> " + list1[i][0]) 
+                            case "2":                
+                                #界面
+                                print("=================欢迎使用武器仓库管理系统=================")
+                                print("\n\t--------------   射手武器   --------------")
+                                print("\t        ---输入序号查看详情 0返回---\n")
+                                #循环判断是否有符合筛选条件的武器
+                                for i in range(0,len(list1)):
+                                    if list1[i][1] == "2":
+                                        #若有符合的武器，显示出来
+                                        cunzai = 1
+                                        count += 1
+                                        #将查询到的武器信息存入
+                                        list2.append(list1[i])
+                                        print("\t\t       <" + (str)(count) + "> " + list1[i][0])   
+                            case "3":                
+                                #界面
+                                print("=================欢迎使用武器仓库管理系统=================")
+                                print("\n\t--------------   法师武器   --------------")
+                                print("\t        ---输入序号查看详情 0返回---\n")
+                                #循环判断是否有符合筛选条件的武器
+                                for i in range(0,len(list1)):
+                                    if list1[i][1] == "3":
+                                        #若有符合的武器，显示出来
+                                        cunzai = 1
+                                        count += 1
+                                        #将查询到的武器信息存入
+                                        list2.append(list1[i])
+                                        print("\t\t       <" + (str)(count) + "> " + list1[i][0])
+                            case "4":
+                                #界面
+                                print("=================欢迎使用武器仓库管理系统=================")
+                                print("\n\t--------------   其他武器   --------------")
+                                print("\t        ---输入序号查看详情 0返回---\n")
+                                #循环判断是否有符合筛选条件的武器
+                                for i in range(0,len(list1)):
+                                    if list1[i][1] == "4":
+                                        #若有符合的武器，显示出来
+                                        cunzai = 1
+                                        count += 1
+                                        #将查询到的武器信息存入
+                                        list2.append(list1[i])
+                                        print("\t\t       <" + (str)(count) + "> " + list1[i][0])
+                            case "0":
+                                self.searchWeapon()
+                                return
+                            case _:
+                                os.system("cls")
+                                print("\t\t    >>>您的输入有误<<<")
+                                break
+                        #查询不到符合的，提示并返回
+                        if cunzai == 0:
+                            est1 = 0
+                            print("\n\t  --------------------------------------")
+                            print("\n\t\t     未查询到该类武器")
+                            print("\n\t  --------------------------------------")
+                            print("\n\t\t  ", end="")
+                            #按任意键继续
+                            os.system("pause")
+                            os.system("cls")
+                        else:
+                            #查询到武器，显示输入数字进入详细信息
+                            print("\n\t\t     >>>  ", end="")
+                            #判断用户想查看那个武器的具体信息
+                            num1 = input();
+                            if num1 == "0":
+                                os.system("cls")
+                                break
+                            else:
+                                if not num1.isdigit():
+                                    os.system("cls")
+                                    print("\t\t    >>>您的输入有误<<<")
+                                    continue
+                                if (int)(num1) < 0 or (int)(num1) > len(list2):
+                                    os.system("cls")
+                                    print("\t\t    >>>您的输入有误<<<")
+                                    continue
+                                os.system("cls")
+                                #界面
+                                print("=================欢迎使用武器仓库管理系统=================")
+                                print("\n\t--------------   武器详情   --------------\n")
+                                #通过Weapon类输出武器详情信息
+                                Weapon(list2[(int)(num1) - 1]).output()
+                                print("\n\t\t  ", end="")
+                                os.system("pause")
+                                os.system("cls")
 #判断武器文件和密码文件是否存在，若不存在则创建，确保程序的正确运行
 if not os.path.exists("password.txt"):
     # w 只用于写入，如果该文件已存在则覆盖，不存在则创建。
