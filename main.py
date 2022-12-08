@@ -1,7 +1,6 @@
 '''
 武器仓库管理系统 :
     1.仓库登录
-    2.密码修改
     3.装备的添加
     4.装备的删除
     5.装备的属性修改
@@ -156,7 +155,6 @@ class House:
         print("\t\t |     <3> 修改武器     |")
         print("\t\t |     <4> 查找武器     |")
         print("\t\t |     <5> 武器列表     |")
-        print("\t\t |     <9> 修改密码     |")
         print("\t\t |     <0> 退出         |")
         print("\t\t +\t\t        +")
         print("\n\t\t     >>>  ", end="")
@@ -188,13 +186,10 @@ class House:
                     self.house()
                 case 5:
                     os.system("cls")
-                    self.addWeapon()
-                case 9:
-                    os.system("cls")
-                    self.addWeapon()
+                    self.listWeapon()
+                    self.house()
                 case 0:
                     os.system("cls")
-                    self.house()
                 case _:
                     os.system("cls")
                     print("\t\t    >>>您的输入有误<<<")
@@ -546,18 +541,32 @@ class House:
             print("       <7>暴击几率     <0>取消修改")
             print("\n\t\t     >>>  ", end="")
             num = input()
+            #判断用户输入的数据能否转换为int型
             if not num.isdigit():
+                #无法转换说明输入有误
                 est = 1
+                #清屏
                 os.system("cls")
+                #提示错误
                 print("\t\t    >>>您的输入有误<<<")
+                #重新循环输入
                 continue
+            #将操作数转换为int型用于对比
             num = int(num)
-            if num < 0 or num > 7:
+            #判断用户的数据是否合法
+            if num <= 0 or num > 7:
+                #判断用户是否想取消
                 if num == 0:
+                    #清屏
                     os.system("cls")
+                    #提示取消
+                    print("\t\t      >>>取消修改<<<")
+                    #回到上一级
                     return;
+                #输入有误进入下一次循环重新输入
                 est = 1
                 os.system("cls")
+                #提示错误
                 print("\t\t    >>>您的输入有误<<<")
             else:
                 #进入下一步前清屏
@@ -1025,6 +1034,60 @@ class House:
                                 os.system("pause")
                                 #清屏进入下一步
                                 os.system("cls")
+    #第五个功能，输出武器列表
+    def listWeapon(self):
+        #est用于判断以下输入操作是否合法，若不合法，通过while循环来重新输入
+        est = 1;
+        while est:
+            #默认进入下一次循环
+            est = 1
+            #通过ReadWeapon类的readweapon方法来将文件中的武器信息读取到list1中
+            list1 = ReadWeapon().readweapon()
+            #武器序号
+            count = 0
+            #武器列表输出界面
+            print("=================欢迎使用武器仓库管理系统=================")
+            print("\n\t--------------   武器列表   --------------")
+            print("\t        ---输入序号查看详情 0返回---\n")
+            #循环判断是否有符合筛选条件的武器
+            for i in range(0,len(list1)):
+                count += 1
+                print("\t\t       <" + (str)(count) + "> " + list1[i][0])
+            #查询到武器，显示输入数字进入详细信息
+            print("\n\t\t     >>>  ", end="")
+            #判断用户想查看那个武器的具体信息
+            num1 = input();
+            if num1 == "0":
+                #0代表退出
+                os.system("cls")
+                break
+            else:
+                #判断用户输入的数据能否转换为int型
+                if not num1.isdigit():
+                    #无法转换提示错误
+                    os.system("cls")
+                    print("\t\t    >>>您的输入有误<<<")
+                    #重新输入
+                    continue
+                #若用户输入的序号不合法，提示错误
+                if (int)(num1) < 0 or (int)(num1) > len(list1):
+                    os.system("cls")
+                    print("\t\t    >>>您的输入有误<<<")
+                    #重新输入
+                    continue
+                os.system("cls")
+                #武器详情界面
+                print("=================欢迎使用武器仓库管理系统=================")
+                print("\n\t--------------   武器详情   --------------\n")
+                #通过Weapon类输出武器详情信息
+                Weapon(list1[(int)(num1) - 1]).output()
+                print("\n\t\t  ", end="")
+                #按任意键继续
+                os.system("pause")
+                #清屏进入下一步
+                os.system("cls")
+    #第六个功能，修改管理员密码
+
 #判断武器文件和密码文件是否存在，若不存在则创建，确保程序的正确运行
 if not os.path.exists("password.txt"):
     # w 只用于写入，如果该文件已存在则覆盖，不存在则创建。
