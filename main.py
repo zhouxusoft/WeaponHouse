@@ -1090,7 +1090,6 @@ class House:
                 os.system("pause")
                 #清屏进入下一步
                 os.system("cls")
-    #第六个功能，修改管理员密码
 
 #判断武器文件和密码文件是否存在，若不存在则创建，确保程序的正确运行
 if not os.path.exists("password.txt"):
