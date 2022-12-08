@@ -1045,6 +1045,8 @@ class House:
             list1 = ReadWeapon().readweapon()
             #武器序号
             count = 0
+            #武器战力
+            allpower = 0
             #武器列表输出界面
             print("=================欢迎使用武器仓库管理系统=================")
             print("\n\t--------------   武器列表   --------------")
@@ -1052,8 +1054,10 @@ class House:
             #循环判断是否有符合筛选条件的武器
             for i in range(0,len(list1)):
                 count += 1
+                allpower += (int)(list1[i][7])
                 print("\t\t       <" + (str)(count) + "> " + list1[i][0])
             #查询到武器，显示输入数字进入详细信息
+            print("\n\t    总战力:%-10s 平均战力:%-10s"%((str)(allpower), (str)((int)(allpower / len(list1)))))
             print("\n\t\t     >>>  ", end="")
             #判断用户想查看那个武器的具体信息
             num1 = input();
