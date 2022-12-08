@@ -35,11 +35,14 @@
 import math
 import os
 
+#创建武器个体类，用于输出武器信息
 class Weapon:
+    #构造函数
     def __init__(self, info):
         self.name = info[0]         #武器名称
-        self.career = info[1]       #武器职业
-        self.quality = info[2]      #武器品质
+        #注意 1 和 '1' 的区别
+        self.career = (int)(info[1])       #武器职业
+        self.quality = (int)(info[2])      #武器品质
         self.damage = info[3]       #武器伤害
         self.speed = info[4]        #武器攻速
         self.range = info[5]        #攻击距离
@@ -73,17 +76,46 @@ class Weapon:
     def output(self):
         print("\t\t|     " + self.Tquality + " " + self.name + "  \t|")
         print("\t\t|     " + self.Tcareer + "  \t\t|")
-        print("\t\t|     战斗力: " + str(int(self.power)) + "\t|")
-        print("\t\t|     伤害: " + str(self.damage) + "\t\t|")
-        print("\t\t|     速度: " + str(self.speed) + "\t\t|")
-        print("\t\t|     距离: " + str(self.range) + "\t\t|")
-        print("\t\t|     暴击: " + str(self.crit) + "\t\t|")
+        print("\t\t|     战斗力: %-8s\t|"%(str(self.power)))
+        print("\t\t|     伤害: %-10s\t|"%(str(self.damage)))
+        print("\t\t|     速度: %-10s\t|"%(str(self.speed)))
+        print("\t\t|     距离: %-10s\t|"%(str(self.range)))
+        print("\t\t|     暴击: %-10s\t|"%(str(self.crit)))
+#此类用于从文件中读取武器信息，存入list1[][]中并返回
+class ReadWeapon:
+    def __init__(self) -> None:
+        pass
 
+    def readweapon(self) -> list:
+        #注意以utf-8的形式打开带有中文的文件，否则会乱码
+        f = open("weapon.txt", "r+" , encoding="utf-8")
+        #将文件指针指向文件末尾
+        f.seek(0, 2)
+        #通过指向文件末尾，来获得文件的长度
+        end = f.tell()
+        #将为文件指针重新指向开头
+        f.seek(0, 0)
+        #list1用于存储文件中所有武器的信息
+        list1 = []
+        #通过循环按行读取文件信息
+        while 1:
+            password = f.readline()
+            #将读取的信息进行处理，把每个信息放入列表中的对应位置
+            list1.append(password.split(" ")[0:])
+            #判断文件是否读到了末尾，并结束循环
+            if f.tell() >= end:
+                break
+            #文件用完及时关闭
+        f.close()
+        return list1
+#此类写用户操作的主体
 class House:
+    #构造方法，进入登入方法
     def __init__(self):
         os.system("cls")  #运行前清屏
         self.login()
-    def login(self):  #登入模块
+    #此方法用于用户登录
+    def login(self):  
         f = open("password.txt", "r+")
         self.password = f.read()
         if self.password == "":    #判断password文件是否为空，若为空则创建密码
@@ -104,7 +136,8 @@ class House:
             os.system("cls")
             print("\t\t  >>>您输入的密码有误<<<")
             self.login()   #密码输入错误重新输入
-    def firstlogin(self,f):  #首次使用（password文件中密码为空）创建管理员密码
+    #若首次使用即password文件中密码为空，则进入创建管理员密码方法
+    def firstlogin(self,f):
         print("=================欢迎使用武器仓库管理系统=================")
         print("\n\t-------- 首次使用需创建管理员密码 ---------")
         print("\t\t       - 输入密码 -")
@@ -113,7 +146,8 @@ class House:
         f.write(temp_password)
         self.password = temp_password
         os.system("cls")  #运行后清屏
-    def house(self):   #仓库具体功能模块
+    #具体功能菜单界面，用户选择进行操作
+    def house(self):
         print("=================欢迎使用武器仓库管理系统=================")
         print("\t--------------   一号仓库   --------------")
         print("\t\t +\t\t        +")
@@ -142,7 +176,8 @@ class House:
                     self.house()
                 case 2:
                     os.system("cls")
-                    self.addWeapon()
+                    self.delWeapon()
+                    self.house()
                 case 3:
                     os.system("cls")
                     self.addWeapon()
@@ -162,8 +197,7 @@ class House:
                     os.system("cls")
                     print("\t\t    >>>您的输入有误<<<")
                     self.house()
-            
-        
+    #第一个功能，添加武器            
     def addWeapon(self):
         #初始化武器信息的八个参数
         weapon = ["", "", "", "", "", "", "", ""];
@@ -182,6 +216,7 @@ class House:
             weapon[0] = input();
             # 判断用户是否想返回
             if weapon[0] == "off" or weapon[0] == "OFF":
+                os.system("cls")
                 return;
             # 判断用户输入数据长度是否合法，应在2-4个汉字之内
             if  weapon[0].__len__() > 4 or weapon[0].__len__() < 2:
@@ -194,26 +229,8 @@ class House:
                 #直接进入下一次循环
                 continue
             else:
-                #注意以utf-8的形式打开带有中文的文件，否则会乱码
-                f = open("weapon.txt", "r+" , encoding="utf-8")
-                #将文件指针指向文件末尾
-                f.seek(0, 2)
-                #通过指向文件末尾，来获得文件的长度
-                end = f.tell()
-                #将为文件指针重新指向开头
-                f.seek(0, 0)
-                #list1用于存储文件中所有武器的信息
-                list1 = []
-                #通过循环按行读取文件信息
-                while 1:
-                    password = f.readline()
-                    #将读取的信息进行处理，把每个信息放入列表中的对应位置
-                    list1.append(password.split(" ")[0:])
-                    #判断文件是否读到了末尾，并结束循环
-                    if f.tell() >= end:
-                        break
-                #文件用完及时关闭
-                f.close()
+                #通过ReadWeapon类中readweapon()来读取文件中武器信息
+                list1 = ReadWeapon().readweapon
                 for i in range(0,len(list1)):
                     if list1[i][0] == weapon[0]:
                         #修改判断条件，重新进入循环
@@ -414,7 +431,6 @@ class House:
         for i in range(0, 8):
             f.write((str)(weapon[i]))
             f.write(" ")
-            print(weapon[i])
         f.write("\n")
         #文件用完及时关闭
         f.close()
@@ -422,6 +438,62 @@ class House:
         os.system("cls")
         #添加成功
         print("\t\t      >>>添加成功<<<")
+    #第二个功能，删除武器库中的武器
+    def delWeapon(self):
+        #est用于判断以下输入操作是否合法，若不合法，通过while循环来重新输入
+        #武器名输入
+        est = 1;
+        while est:
+            #默认下一次会再进入循环
+            #界面
+            print("=================欢迎使用武器仓库管理系统=================")
+            print("\n\t--------------   删除武器   --------------")
+            print("\n\t              请输入武器名称")
+            print("\t             - 输入off返回 -")
+            print("\n\t\t     >>>  ", end="")
+            weaponname = input();
+            # 判断用户是否想返回
+            if weaponname == "off" or weaponname == "OFF":
+                os.system("cls")
+                return;
+            #通过Weapon类中武器信息读取函数来获取文件中武器信息
+            list1 = ReadWeapon().readweapon()
+            #循环判断用户输入的名字是否存在
+            for i in range(0,len(list1)):
+                if list1[i][0] == weaponname:
+                    #检测到武器存在，修改判断条件，不进入下次循环
+                    est = 0
+                    break        
+            if est == 1:
+                #清屏重新显示
+                os.system("cls")
+                #提示输入错误
+                print("\t\t >>>该名称的武器不存在<<<")
+            else:
+                os.system("cls")
+                #界面
+                print("=================欢迎使用武器仓库管理系统=================")
+                print("\n\t--------------   武器详情   --------------\n")
+                #通过Weapon类输出武器详情信息
+                Weapon(list1[i]).output()
+                print("\n\t\t 是否确认删除(Y/N):", end="")
+                YorN = input()
+                if YorN == 'Y' or YorN == 'y':
+                    # w 只用于写入，如果该文件已存在则覆盖，不存在则创建。
+                    f = open("weapon.txt", "w", encoding="utf-8")
+                    for x in range(0, len(list1)):
+                        if x != i:
+                            for y in range(0, 8):
+                                f.write((str)(list1[x][y]))
+                                f.write(" ")
+                            f.write("\n")
+                    #文件用完及时关闭
+                    f.close()
+                    os.system("cls")
+                    print("\t\t      >>>删除成功<<<")
+                else:
+                    os.system("cls")
+                    print("\t\t      >>>取消删除<<<")
 
 #判断武器文件和密码文件是否存在，若不存在则创建
 if not os.path.exists("password.txt"):
@@ -431,15 +503,9 @@ if not os.path.exists("password.txt"):
 if not os.path.exists("weapon.txt"):
     f = open("weapon.txt", "w")
     f.close()
-'''
-info = ["星辰之龙", 3, 5, 100, 1, 100, 0.5, 1500]
-w = Weapon(info)
+#实例化House对象，用户将进入操作界面
 h = House()
-w.output()
-'''
-h = House()
-
-os.system("pause");
+#操作完结束程序
 os.system("cls");  #结束前清屏
 print("===感谢使用===")
 os.system("pause");
