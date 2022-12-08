@@ -76,7 +76,7 @@ class Weapon:
     def output(self):
         print("\t\t|     " + self.Tquality + " " + self.name + "  \t|")
         print("\t\t|     " + self.Tcareer + "  \t\t|")
-        print("\t\t|     战斗力: %-8s\t|"%(str(self.power)))
+        print("\t\t|     战力: %-10s\t|"%(str(self.power)))
         print("\t\t|     伤害: %-10s\t|"%(str(self.damage)))
         print("\t\t|     速度: %-10s\t|"%(str(self.speed)))
         print("\t\t|     距离: %-10s\t|"%(str(self.range)))
@@ -180,7 +180,8 @@ class House:
                     self.house()
                 case 3:
                     os.system("cls")
-                    self.addWeapon()
+                    self.modWeapon()
+                    self.house()
                 case 4:
                     os.system("cls")
                     self.addWeapon()
@@ -230,7 +231,7 @@ class House:
                 continue
             else:
                 #通过ReadWeapon类中readweapon()来读取文件中武器信息
-                list1 = ReadWeapon().readweapon
+                list1 = ReadWeapon().readweapon()
                 for i in range(0,len(list1)):
                     if list1[i][0] == weapon[0]:
                         #修改判断条件，重新进入循环
@@ -319,7 +320,7 @@ class House:
             #界面
             print("=================欢迎使用武器仓库管理系统=================")
             print("\n\t--------------   添加武器   --------------")
-            print("\n\t       请输入武器攻击伤害(0 ~ 999)")
+            print("\n\t       请输入武器攻击伤害(0 ~ 9999)")
             print("\n\t\t     >>>  ", end="")
             #记录用户的输入
             weapon[3] = input();
@@ -494,8 +495,313 @@ class House:
                 else:
                     os.system("cls")
                     print("\t\t      >>>取消删除<<<")
-
-#判断武器文件和密码文件是否存在，若不存在则创建
+    #第三个功能，修改武器的某个信息
+    def modWeapon(self):
+        #初始化武器信息的八个参数
+        weapon = ["", "", "", "", "", "", "", ""];
+        #est用于判断以下输入操作是否合法，若不合法，通过while循环来重新输入
+        est = 1;
+        while est:
+            #默认下一次会再进入循环
+            est = 1;
+            #界面
+            print("=================欢迎使用武器仓库管理系统=================")
+            print("\n\t--------------   修改武器   --------------")
+            print("\n\t              请输入武器名称")
+            print("\t             - 输入off返回 -")
+            print("\n\t\t     >>>  ", end="")
+            weapon[0] = input();
+            # 判断用户是否想返回
+            if weapon[0] == "off" or weapon[0] == "OFF":
+                os.system("cls")
+                return;
+            #通过Weapon类中武器信息读取函数来获取文件中武器信息
+            list1 = ReadWeapon().readweapon()
+            #循环判断用户输入的名字是否存在
+            for i in range(0,len(list1)):
+                if list1[i][0] == weapon[0]:
+                    #检测到武器存在，修改判断条件，不进入下次循环
+                    est = 0
+                    break;
+            if est == 1:
+                #清屏重新显示
+                os.system("cls")
+                #提示输入错误
+                print("\t\t >>>该名称的武器不存在<<<")
+            else:
+                #清屏进入下一步
+                os.system("cls")
+        #est用于判断以下输入操作是否合法，若不合法，通过while循环来重新输入
+        est = 1;
+        while est:
+            #默认下一次不会再进入循环
+            est = 0;
+            #界面
+            print("=================欢迎使用武器仓库管理系统=================")
+            print("\n\t--------------   武器详情   --------------\n")
+            #通过Weapon类输出武器详情信息
+            Weapon(list1[i]).output()
+            print("\n       <1>武器名称     <2>武器职业     <3>武器品质")
+            print("       <4>攻击伤害     <5>攻击攻速     <6>攻击距离")
+            print("       <7>暴击几率     <0>取消修改")
+            print("\n\t\t     >>>  ", end="")
+            num = input()
+            if not num.isdigit():
+                est = 1
+                os.system("cls")
+                print("\t\t    >>>您的输入有误<<<")
+                continue
+            num = int(num)
+            if num < 0 or num > 7:
+                if num == 0:
+                    os.system("cls")
+                    return;
+                est = 1
+                os.system("cls")
+                print("\t\t    >>>您的输入有误<<<")
+            else:
+                #进入下一步前清屏
+                os.system("cls")
+        match num:
+            case 1:
+                    #est用于判断以下输入操作是否合法，若不合法，通过while循环来重新输入
+                    #武器名输入
+                    est = 1;
+                    while est:
+                        #默认下一次不会再进入循环
+                        est = 0;
+                        #界面
+                        print("=================欢迎使用武器仓库管理系统=================")
+                        print("\n\t--------------   修改武器   --------------")
+                        print("\n\t                 武器名称")
+                        print("\t                2至4个汉字")
+                        print("\n\t\t     >>>  ", end="")
+                        weapon[0] = input();
+                        # 判断用户输入数据长度是否合法，应在2-4个汉字之内
+                        if  weapon[0].__len__() > 4 or weapon[0].__len__() < 2:
+                            #修改判断条件，重新进入循环
+                            est = 1
+                            #清屏重新显示
+                            os.system("cls")
+                            #提示输入错误
+                            print("\t\t >>>武器名称过长或过短<<<")
+                            #直接进入下一次循环
+                            continue
+                        else:
+                            #通过ReadWeapon类中readweapon()来读取文件中武器信息
+                            list2 = ReadWeapon().readweapon()
+                            for j in range(0,len(list2)):
+                                if list2[j][0] == weapon[0]:
+                                    #修改判断条件，重新进入循环
+                                    est = 1
+                                    #清屏重新显示
+                                    os.system("cls")
+                                    #提示输入错误
+                                    print("\t\t >>>该名称的武器已存在<<<")
+                            #直接进入下一次循环
+                            #此continue语句要放在上面for语句的外面，否则跳出的时内层for循环而不是外层的while
+                            if est == 1:
+                                continue                           
+                    list1[i][0] = weapon[0]
+            case 2:
+                    est = 1
+                    while est:
+                        #默认下一次不会再进入循环
+                        est = 0;
+                        #界面
+                        print("=================欢迎使用武器仓库管理系统=================")
+                        print("\n\t--------------   修改武器   --------------")
+                        print("\n\t              请输入武器职业")
+                        print("\n\t\t        <1> 战士")
+                        print("\t\t        <2> 射手")
+                        print("\t\t        <3> 法师")
+                        print("\t\t        <4> 不详")
+                        print("\n\t\t     >>>  ", end="")
+                        #记录用户的操作
+                        weapon[1] = input();
+                        #str.isdigit()用于判断string是否能转换为int，避免用户输入错误时程序报错终止
+                        if not weapon[1].isdigit():
+                            est = 1
+                            os.system("cls")
+                            print("\t\t    >>>您的输入有误<<<")
+                            continue
+                        weapon[1] = int(weapon[1])
+                        #用户输入给出值以外的数据报错
+                        if weapon[1] != 1 and weapon[1] != 2 and weapon[1] != 3 and weapon[1] != 4:
+                            est = 1
+                            os.system("cls")
+                            print("\t\t    >>>您的输入有误<<<")
+                            continue
+                    list1[i][1] = weapon[1]
+            case 3:
+                    est = 1
+                    while est:
+                        #默认下一次不会再进入循环
+                        est = 0;
+                        #界面
+                        print("=================欢迎使用武器仓库管理系统=================")
+                        print("\n\t--------------   修改武器   --------------")
+                        print("\n\t              请输入武器品质")
+                        print("\n\t\t       <1> 普通 白")
+                        print("\t\t       <2> 精良 绿")
+                        print("\t\t       <3> 稀有 蓝")
+                        print("\t\t       <4> 史诗 紫")
+                        print("\t\t       <5> 传说 橙")
+                        print("\t\t       <6> 绝世 红")
+                        print("\t\t       <7> 不详 黑")
+                        print("\n\t\t     >>>  ", end="")
+                        #记录用户的输入
+                        weapon[2] = input();
+                        #str.isdigit()用于判断string是否能转换为int，避免用户输入错误时程序报错终止
+                        if not weapon[2].isdigit():
+                            est = 1
+                            os.system("cls")
+                            print("\t\t    >>>您的输入有误<<<")
+                            continue
+                        #判断用户输入的操作 ，并执行相对应的记录
+                        #若用户输入列表以外的数据，默认为7
+                        weapon[2] = int(weapon[2])
+                        if weapon[2] < 0 or weapon[2] > 7:
+                            est = 1
+                            os.system("cls")
+                            print("\t\t    >>>您的输入有误<<<")
+                            continue
+                    list1[i][2] = weapon[2]
+            case 4:
+                    est = 1
+                    while est:
+                        #默认下一次不会再进入循环
+                        est = 0;
+                        #界面
+                        print("=================欢迎使用武器仓库管理系统=================")
+                        print("\n\t--------------   修改武器   --------------")
+                        print("\n\t       请输入武器攻击伤害(0 ~ 9999)")
+                        print("\n\t\t     >>>  ", end="")
+                        #记录用户的输入
+                        weapon[3] = input();
+                        #str.isdigit()用于判断string是否能转换为int，避免用户输入错误时程序报错终止
+                        if not weapon[3].isdigit():
+                            est = 1
+                            os.system("cls")
+                            print("\t\t    >>>您的输入有误<<<")
+                            continue
+                        #判断用户输入的操作 ，并执行相对应的记录
+                        #输入为字符串类型，转换为int型
+                        weapon[3] = int(weapon[3])
+                        if weapon[3] > 999 or weapon[3] < 0:
+                            est = 1
+                            os.system("cls")
+                            print("\t\t    >>>您的输入有误<<<")
+                    list1[i][3] = weapon[3]
+            case 5:
+                    est = 1
+                    while est:
+                        #默认下一次不会再进入循环
+                        est = 0;
+                        #界面
+                        print("=================欢迎使用武器仓库管理系统=================")
+                        print("\n\t--------------   添加武器   --------------")
+                        print("\n\t         请输入武器攻击速度(每秒)")
+                        print("\n\t\t     >>>  ", end="")
+                        #记录用户的输入
+                        weapon[4] = input();
+                        #str.isdigit()用于判断string是否能转换为int，避免用户输入错误时程序报错终止
+                        if not weapon[4].isdigit():
+                            est = 1
+                            os.system("cls")
+                            print("\t\t    >>>您的输入有误<<<")
+                            continue
+                        #判断用户输入的操作 ，并执行相对应的记录
+                        #输入为字符串类型，转换为int型
+                        weapon[4] = int(weapon[4])
+                        if weapon[4] > 999 or weapon[4] < 0:
+                            est = 1
+                            os.system("cls")
+                            print("\t\t    >>>您的输入有误<<<")
+                    list1[i][4] = weapon[4]
+            case 6:
+                    est = 1
+                    while est:
+                        #默认下一次不会再进入循环
+                        est = 0;
+                        #界面
+                        print("=================欢迎使用武器仓库管理系统=================")
+                        print("\n\t--------------   修改武器   --------------")
+                        print("\n\t         请输入武器攻击距离(厘米)")
+                        print("\n\t\t     >>>  ", end="")
+                        #记录用户的输入
+                        weapon[5] = input();
+                        #str.isdigit()用于判断string是否能转换为int，避免用户输入错误时程序报错终止
+                        if not weapon[5].isdigit():
+                            est = 1
+                            os.system("cls")
+                            print("\t\t    >>>您的输入有误<<<")
+                            continue
+                        #判断用户输入的操作 ，并执行相对应的记录
+                        #输入为字符串类型，转换为int型
+                        weapon[5] = int(weapon[5])
+                        if weapon[5] > 99999 or weapon[5] < 0:
+                            est = 1
+                            os.system("cls")
+                            print("\t\t    >>>您的输入有误<<<")
+                    list1[i][5] = weapon[5]
+            case 7:
+                    est = 1
+                    while est:
+                        #默认下一次不会再进入循环
+                        est = 0;
+                        #界面
+                        print("=================欢迎使用武器仓库管理系统=================")
+                        print("\n\t--------------   添加武器   --------------")
+                        print("\n\t         请输入武器暴击几率(0~100)")
+                        print("\n\t\t     >>>  ", end="")
+                        #记录用户的输入
+                        weapon[6] = input();
+                        #str.isdigit()用于判断string是否能转换为int，避免用户输入错误时程序报错终止
+                        if not weapon[6].isdigit():
+                            est = 1
+                            os.system("cls")
+                            print("\t\t    >>>您的输入有误<<<")
+                            continue
+                        #判断用户输入的操作 ，并执行相对应的记录
+                        #输入为字符串类型，转换为int型
+                        weapon[6] = int(weapon[6])
+                        if weapon[6] > 100 or weapon[6] < 0:
+                            est = 1
+                            os.system("cls")
+                            print("\t\t    >>>您的输入有误<<<")
+                    list1[i][6] = weapon[6]
+        #武器战力
+        #计算公式：[(基础伤害 * 非暴击几率百分比) + (暴击伤害 * 暴击率百分比)] * 攻击速度 * sqrt(攻击距离)
+        list1[i][7] = (int)((((int)(list1[i][3]) * ((int)(list1[i][6]) / 100)) + ((int)(list1[i][3]) * 2 * (1 - (int)(list1[i][6]) / 100))) * (int)(list1[i][4]) * math.sqrt((int)(list1[i][5])))
+        '''
+            修改武器信息的方法：
+            1.删除要修改的武器信息
+            2.增加修改后的武器信息
+        '''
+        # w 只用于写入，如果该文件已存在则覆盖，不存在则创建。
+        f = open("weapon.txt", "w", encoding="utf-8")
+        for x in range(0, len(list1)):
+            if x != i:
+                for y in range(0, 8):
+                    f.write((str)(list1[x][y]))
+                    f.write(" ")
+                f.write("\n")
+                    #文件用完及时关闭
+        f.close()
+        #打开武器库文件，准备写入信息 a为追加模式,以utf-8打开防止乱码
+        f = open("weapon.txt", "a", encoding="utf-8")
+        for j in range(0, 8):
+            f.write((str)(list1[i][j]))
+            f.write(" ")
+        f.write("\n")
+        #文件用完及时关闭
+        f.close()
+        #进入下一步前清屏
+        os.system("cls")
+        #添加成功
+        print("\t\t      >>>修改成功<<<")
+#判断武器文件和密码文件是否存在，若不存在则创建，确保程序的正确运行
 if not os.path.exists("password.txt"):
     # w 只用于写入，如果该文件已存在则覆盖，不存在则创建。
     f = open("password.txt", "w")
