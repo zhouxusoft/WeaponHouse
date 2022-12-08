@@ -184,7 +184,8 @@ class House:
                     self.house()
                 case 4:
                     os.system("cls")
-                    self.addWeapon()
+                    self.searchWeapon()
+                    self.house()
                 case 5:
                     os.system("cls")
                     self.addWeapon()
@@ -320,7 +321,7 @@ class House:
             #界面
             print("=================欢迎使用武器仓库管理系统=================")
             print("\n\t--------------   添加武器   --------------")
-            print("\n\t       请输入武器攻击伤害(0 ~ 9999)")
+            print("\n\t       请输入武器攻击伤害(0 ~ 99999)")
             print("\n\t\t     >>>  ", end="")
             #记录用户的输入
             weapon[3] = input();
@@ -333,7 +334,7 @@ class House:
             #判断用户输入的操作 ，并执行相对应的记录
             #输入为字符串类型，转换为int型
             weapon[3] = int(weapon[3])
-            if weapon[3] > 999 or weapon[3] < 0:
+            if weapon[3] > 99999 or weapon[3] < 0:
                 est = 1
                 os.system("cls")
                 print("\t\t    >>>您的输入有误<<<")
@@ -675,7 +676,7 @@ class House:
                         #界面
                         print("=================欢迎使用武器仓库管理系统=================")
                         print("\n\t--------------   修改武器   --------------")
-                        print("\n\t       请输入武器攻击伤害(0 ~ 9999)")
+                        print("\n\t       请输入武器攻击伤害(0 ~ 99999)")
                         print("\n\t\t     >>>  ", end="")
                         #记录用户的输入
                         weapon[3] = input();
@@ -688,7 +689,7 @@ class House:
                         #判断用户输入的操作 ，并执行相对应的记录
                         #输入为字符串类型，转换为int型
                         weapon[3] = int(weapon[3])
-                        if weapon[3] > 999 or weapon[3] < 0:
+                        if weapon[3] > 99999 or weapon[3] < 0:
                             est = 1
                             os.system("cls")
                             print("\t\t    >>>您的输入有误<<<")
@@ -801,6 +802,11 @@ class House:
         os.system("cls")
         #添加成功
         print("\t\t      >>>修改成功<<<")
+    #第四个功能，查询武器信息
+    def searchWeapon(self):
+        pass
+
+
 #判断武器文件和密码文件是否存在，若不存在则创建，确保程序的正确运行
 if not os.path.exists("password.txt"):
     # w 只用于写入，如果该文件已存在则覆盖，不存在则创建。
