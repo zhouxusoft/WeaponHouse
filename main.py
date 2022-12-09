@@ -1051,12 +1051,20 @@ class House:
             print("=================欢迎使用武器仓库管理系统=================")
             print("\n\t--------------   武器列表   --------------")
             print("\t        ---输入序号查看详情 0返回---\n")
-            #循环判断是否有符合筛选条件的武器
+            #判断武器库中是否有武器
+            if list1 == [[""]]:
+                print("\n\t  --------------------------------------")
+                print("\n\t\t     未查询到该类武器")
+                print("\n\t  --------------------------------------")
+                print("\n\t\t  ", end="")
+                os.system("pause")
+                os.system("cls")
+                return
             for i in range(0,len(list1)):
                 count += 1
                 allpower += (int)(list1[i][7])
                 print("\t\t       <" + (str)(count) + "> " + list1[i][0])
-            #查询到武器，显示输入数字进入详细信息
+            #查询到武器，显示输入数字进入详细信息:               
             print("\n\t    总战力:%-10s 平均战力:%-10s"%((str)(allpower), (str)((int)(allpower / len(list1)))))
             print("\n\t\t     >>>  ", end="")
             #判断用户想查看那个武器的具体信息
